@@ -9,7 +9,7 @@ const Navbar = () => {
 				<NavLink to="/profile">Profile</NavLink>
 			</div>
 			<div className={s.item}>
-				<NavLink to="/messages">Messages</NavLink>
+				<NavLink to="/dialogs">Messages</NavLink>
 			</div>
 			<div className={s.item}>
 				<NavLink to="/news">News</NavLink>
@@ -24,3 +24,4 @@ const Navbar = () => {
 	);
 };
 export default Navbar;
+
