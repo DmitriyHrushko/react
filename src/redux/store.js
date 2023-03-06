@@ -27,7 +27,7 @@ let store = {
 				{ id: 2, message: 'How are U?' },
 				{ id: 3, message: 'Okey' },
 				{ id: 4, message: 'Write me later' },
-				{ id: 5, message: 'Nice' }
+				//{ id: 5, message: 'Nice' }
 			],
 			newMessageBody: ""
 		},
@@ -49,9 +49,9 @@ let store = {
 		this._state.profilePage = profileReducer(this._state.profilePage, action);
 		this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action);
 		this._state.sidebar = sidebarReducer(this._state.sidebar, action);
-
 		this._callSubscriber(this._state);
 	}
 }
 
-export default store;  
+export default store;
+window.store = store;
