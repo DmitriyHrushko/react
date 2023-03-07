@@ -20,7 +20,6 @@ let initialState = {
 };
 
 const dialogsReducer = (state = initialState, action) => {
-	debugger;
 	switch (action.type) {
 		case UPDATE_NEW_MESSAGE_BODY:
 			state.newMessageBody = action.body;
