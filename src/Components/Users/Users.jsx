@@ -2,7 +2,7 @@ import React from 'react';
 import s from './Users.module.css';
 import userPhoto from '../../assets/images/user.png';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
+import { usersAPI } from '../../api/api';
 
 let Users = (props) => {
 	let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
@@ -39,18 +39,7 @@ let Users = (props) => {
 								<button
 									disabled={props.followingInProgress.some((id) => id === u.id)}
 									onClick={() => {
-										props.toogleIsFollowingProgress(true, u.id);
-										axios
-											.delete(`https://social-network.samuraijs.com/api/1.0/follow/${u.id}`, {
-												withCredentials: true,
-												headers: { 'API-KEY': 'f6b31419-e96b-4791-95ff-aca7ab13d30a' },
-											})
-											.then((response) => {
-												if (response.data.resultCode === 0) {
-													props.unfollow(u.id);
-												}
-												props.toogleIsFollowingProgress(false, u.id);
-											});
+										props.unfollow(u.id);
 									}}
 								>
 									Unfollow
@@ -59,19 +48,7 @@ let Users = (props) => {
 								<button
 									disabled={props.followingInProgress.some((id) => id === u.id)}
 									onClick={() => {
-										props.toogleIsFollowingProgress(true, u.id);
-										axios
-											.post(
-												`https://social-network.samuraijs.com/api/1.0/follow/${u.id}`,
-												{},
-												{ withCredentials: true }
-											)
-											.then((response) => {
-												if (response.data.resultCode === 0) {
-													props.follow(u.id);
-												}
-												props.toogleIsFollowingProgress(false, u.id);
-											});
+										props.follow(u.id);
 									}}
 								>
 									Follow
