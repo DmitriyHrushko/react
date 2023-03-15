@@ -24,6 +24,9 @@ const App = (props) => {
 						<Route path="/users" element=
 							{<UsersContainer />}
 						/>
+						<Route path="/login" element=
+							{<UsersContainer />}
+						/>
 					</Routes>
 				</div>
 			</div>
