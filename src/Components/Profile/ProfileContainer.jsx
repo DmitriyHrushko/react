@@ -1,49 +1,89 @@
 import React from 'react';
 import Profile from './Profile';
 import { connect } from 'react-redux';
-import { getUserProfile, getStatus, updateStatus } from '../../redux/profile-reducer';
-import { useParams } from 'react-router-dom';
-import { withAuthRedirect } from '../../hoc/withAuthRedirect';
-import { compose } from '@reduxjs/toolkit';
-
-export function withRouter(Children) {
-	return (props) => {
-		const match = { params: useParams() };
-		return <Children {...props} match={match} />;
-	};
-}
+import { getStatus, getUserProfile, updateStatus } from '../../redux/profile-reducer';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { compose } from 'redux';
+import { Navigate } from 'react-router-dom';
 
 class ProfileContainer extends React.Component {
-	componentDidMount() {
-		let userId = this.props.match.params.userId;
-		if (!userId) {
-			userId = this.props.authorizedUserId; //28361
-		}
-		this.props.getUserProfile(userId);
-		setTimeout(() => {
-			this.props.getStatus(userId);
-		}, 1000);
+	constructor(props) {
+		super(props);
+		this.state = {
+			isShowMyProfile: true,
+		};
 	}
+
+	componentDidMount() {
+		let userIdFromPath = +this.props.router.params.userId;
+		let authorisedUserId = this.props.authorisedUserId;
+		if (userIdFromPath) {
+			this.props.getUserProfile(userIdFromPath);
+			this.props.getStatus(userIdFromPath);
+		} else {
+			if (this.props.isAuth) {
+				this.props.getUserProfile(authorisedUserId);
+				this.props.getStatus(authorisedUserId);
+			}
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		let userIdFromPath = +this.props.router.params.userId;
+		let authorisedUserId = this.props.authorisedUserId;
+		let isShowMyProfile = this.state.isShowMyProfile;
+
+		if (isShowMyProfile) {
+			if (userIdFromPath === authorisedUserId) {
+				this.setState({ isShowMyProfile: false });
+			}
+
+			if (!userIdFromPath && this.props.isAuth) {
+				this.props.getUserProfile(authorisedUserId);
+				this.props.getStatus(authorisedUserId);
+				this.setState({ isShowMyProfile: false });
+			}
+		}
+	}
+
 	render() {
+		if (!this.props.isAuth && !this.props.router.params.userId) {
+			return <Navigate to={'/login'} />;
+		}
 		return (
-			<Profile
-				{...this.props}
-				profile={this.props.profile}
-				status={this.props.status}
-				updateStatus={this.props.updateStatus}
-			/>
+			<div>
+				<Profile
+					{...this.props}
+					profile={this.props.profile}
+					status={this.props.status}
+					updateStatus={this.props.updateStatus}
+				/>
+			</div>
 		);
 	}
 }
-let mapStateToProps = (state) => ({
-	profile: state.profilePage.profile,
-	status: state.profilePage.status,
-	authorizedUserId: state.auth.userId,
-	isAuth: state.auth.isAuth,
-});
+// wrapper to use react router's v6 hooks in class component (to use HOC pattern, like in router v5)
+function withRouter(Component) {
+	function ComponentWithRouterProp(props) {
+		let location = useLocation();
+		let navigate = useNavigate();
+		let params = useParams();
+		return <Component {...props} router={{ location, navigate, params }} />;
+	}
+	return ComponentWithRouterProp;
+}
 
-export default compose(
-	connect(mapStateToProps, { getUserProfile, getStatus, updateStatus }),
-	withRouter
-	//withAuthRedirect
+let mapStateToProps = (state) => {
+	return {
+		profile: state.profilePage.profile,
+		status: state.profilePage.status,
+		authorisedUserId: state.auth.userId,
+		isAuth: state.auth.isAuth,
+	};
+};
+const ProfileContainerCompose = compose(
+	withRouter,
+	connect(mapStateToProps, { getUserProfile, getStatus, updateStatus })
 )(ProfileContainer);
+
+export default ProfileContainerCompose;
