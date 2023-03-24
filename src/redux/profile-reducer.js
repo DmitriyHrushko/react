@@ -71,5 +71,4 @@ export const updateStatus = (status) => async (dispatch) => {
 		dispatch(setStatus(status));
 };
 
-
 export default profileReducer; 
