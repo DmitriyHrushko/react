@@ -10,6 +10,10 @@ import LoginPage from './Components/Login/Login';
 import { initializeApp } from './redux/app-reducer';
 import { connect } from 'react-redux';
 import Preloader from './Components/preloader/Preloader';
+import store from './redux/redux-store';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+
 
 class App extends React.Component {
 	componentDidMount() {
@@ -38,6 +42,15 @@ class App extends React.Component {
 let mapStateToProps = (state) => ({
 	initialized: state.app.initialized
 })
-export default connect(mapStateToProps, { initializeApp })(App)
+let AppContainer = connect(mapStateToProps, { initializeApp })(App)
 
-
+const SamuraiJSApp = (props) => {
+	return <React.StrictMode>
+		<BrowserRouter>
+			<Provider store={store}>
+				<AppContainer />
+			</Provider>
+		</BrowserRouter>
+	</React.StrictMode>
+}
+export default SamuraiJSApp;
