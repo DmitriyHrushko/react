@@ -39,3 +39,5 @@ let mapStateToProps = (state) => ({
 	initialized: state.app.initialized
 })
 export default connect(mapStateToProps, { initializeApp })(App)
+
+
