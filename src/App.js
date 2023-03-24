@@ -14,7 +14,6 @@ import store from './redux/redux-store';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
-
 class App extends React.Component {
 	componentDidMount() {
 		this.props.initializeApp();
