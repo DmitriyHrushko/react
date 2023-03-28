@@ -1,18 +1,18 @@
 import React from 'react';
 import './App.css';
-import DialogsContainer from './Components/Dialogs/DialogsContainer';
 import Navbar from './Components/Navbar/Navbar';
 import { Route, Routes } from 'react-router-dom';
 import UsersContainer from './Components/Users/UsersContainer';
-import ProfileContainer from './Components/Profile/ProfileContainer';
 import HeaderContainer from './Components/Header/HeaderContainer';
 import LoginPage from './Components/Login/Login';
-import { initializeApp } from './redux/app-reducer';
+import { initializeApp } from './redux/app-reducer.ts';
 import { connect } from 'react-redux';
 import Preloader from './Components/preloader/Preloader';
-import store from './redux/redux-store';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import DialogsContainer from './Components/Dialogs/DialogsContainer';
+import ProfileContainer from './Components/Profile/ProfileContainer';
+
+
+//import DialogsContainer from './Components/Dialogs/DialogsContainer';
 
 class App extends React.Component {
 	componentDidMount() {
@@ -41,15 +41,5 @@ class App extends React.Component {
 let mapStateToProps = (state) => ({
 	initialized: state.app.initialized
 })
-let AppContainer = connect(mapStateToProps, { initializeApp })(App)
+export default connect(mapStateToProps, { initializeApp })(App)
 
-const SamuraiJSApp = (props) => {
-	return <React.StrictMode>
-		<BrowserRouter>
-			<Provider store={store}>
-				<AppContainer />
-			</Provider>
-		</BrowserRouter>
-	</React.StrictMode>
-}
-export default SamuraiJSApp;
